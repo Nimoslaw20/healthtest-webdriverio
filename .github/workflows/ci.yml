@@ -1,0 +1,29 @@
+name: CI
+on: [push, pull_request]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 20
+
+      - name: Install dependencies
+        run: npm install
+             npm install webdriverio --save-dev
+             npm install @wdio/cli
+          
+      - name: Run tests
+        run:  npm test #npx wdio run ./wdio.conf.ts
+
+      - name: Upload logs on failure
+        uses: actions/upload-artifact@v3
+        if: always()
+        with:
+          name: results
+          path: results/
+          retention-days: 5
